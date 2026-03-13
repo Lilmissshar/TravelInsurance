@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+rel="stylesheet">
+    <title>Travel Insurance - Step 1</title>
+</head>
+<body>
+
+<h2>Step 1: Travel Details</h2>
+
+<form action="/step2" method="post">
+
+    <label>Coverage:</label>
+    <select name="coverage">
+        <option value="SINGLE">Single Trip</option>
+        <option value="ANNUAL">Annual</option>
+    </select>
+
+    <br><br>
+
+    <label>Area:</label>
+    <select name="area">
+        <option value="AREA1">Area 1</option>
+        <option value="AREA2">Area 2</option>
+        <option value="AREA3">Area 3</option>
+        <option value="AREA4">Area 4</option>
+    </select>
+
+    <br><br>
+
+    <label>Start Date:</label>
+    <input type="date" name="startDate">
+
+    <br><br>
+
+    <label>End Date:</label>
+    <input type="date" name="endDate">
+
+    <br><br>
+
+    <button type="submit">Next</button>
+
+</form>
+
+</body>
+</html>

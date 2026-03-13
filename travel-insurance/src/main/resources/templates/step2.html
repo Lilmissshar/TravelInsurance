@@ -1,0 +1,22 @@
+<form action="/customer" method="post">
+
+<h2>Select Plan</h2>
+
+<label>
+<input type="radio" name="plan" value="A"> Plan A
+</label>
+
+<label>
+<input type="radio" name="plan" value="B"> Plan B
+</label>
+
+<!-- PASS STEP 1 DATA -->
+
+<input type="hidden" name="coverage" th:value="${coverage}">
+<input type="hidden" name="area" th:value="${area}">
+<input type="hidden" name="startDate" th:value="${startDate}">
+<input type="hidden" name="endDate" th:value="${endDate}">
+
+<button type="submit">Next</button>
+
+</form>
