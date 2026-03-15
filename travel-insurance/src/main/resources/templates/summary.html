@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-rel="stylesheet">
+    <meta charset="UTF-8">
     <title>Travel Insurance Summary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="p-4">
+
+<!-- Display error message if exists -->
+<p th:if="${errorMessage}" class="text-danger">
+    <span th:text="${errorMessage}"></span>
+</p>
 
 <h2>Insurance Summary</h2>
 
 <h3>Travel Details</h3>
-
-Coverage: <span th:text="${coverage}"></span><br>
-Area: <span th:text="${area}"></span><br>
-Start Date: <span th:text="${startDate}"></span><br>
-End Date: <span th:text="${endDate}"></span><br>
-Plan: <span th:text="${plan}"></span><br>
+<ul>
+    <li>Coverage: <span th:text="${request.coverage}"></span></li>
+    <li>Area: <span th:text="${request.area}"></span></li>
+    <li>Start Date: <span th:text="${request.startDate}"></span></li>
+    <li>End Date: <span th:text="${request.endDate}"></span></li>
+    <li>Plan: <span th:text="${request.plan}"></span></li>
+</ul>
 
 <h3>Customer Details</h3>
-
-Name: <span th:text="${fullName}"></span><br>
-NRIC: <span th:text="${nric}"></span><br>
-Mobile: <span th:text="${mobile}"></span><br>
-Email: <span th:text="${email}"></span><br>
+<ul>
+    <li>Name: <span th:text="${request.fullName}"></span></li>
+    <li>NRIC: <span th:text="${request.nric}"></span></li>
+    <li>Mobile: <span th:text="${request.mobile}"></span></li>
+    <li>Email: <span th:text="${request.email}"></span></li>
+    <li>Address Line 1: <span th:text="${request.addressLine1}"></span></li>
+    <li>Address Line 2: <span th:text="${request.addressLine2}"></span></li>
+    <li>Postcode: <span th:text="${request.postCode}"></span></li>
+</ul>
 
 <h3>Price</h3>
+<p>RM <span th:text="${price}"></span></p>
 
-RM <span th:text="${price}"></span>
+<!-- Confirm Purchase Form -->
+<form th:action="@{/confirm}" method="post" th:object="${request}">
+    <input type="hidden" th:field="*{coverage}">
+    <input type="hidden" th:field="*{area}">
+    <input type="hidden" th:field="*{startDate}">
+    <input type="hidden" th:field="*{endDate}">
+    <input type="hidden" th:field="*{plan}">
+    <input type="hidden" th:field="*{fullName}">
+    <input type="hidden" th:field="*{nric}">
+    <input type="hidden" th:field="*{mobile}">
+    <input type="hidden" th:field="*{email}">
+    <input type="hidden" th:field="*{addressLine1}">
+    <input type="hidden" th:field="*{addressLine2}">
+    <input type="hidden" th:field="*{postCode}">
 
-<br><br>
-
-<form action="/confirm" method="post">
-
-    <input type="hidden" name="coverage" th:value="${coverage}">
-    <input type="hidden" name="area" th:value="${area}">
-    <input type="hidden" name="startDate" th:value="${startDate}">
-    <input type="hidden" name="endDate" th:value="${endDate}">
-    <input type="hidden" name="plan" th:value="${plan}">
-    <input type="hidden" name="nric" th:value="${nric}">
-
-    <button type="submit">Confirm Purchase</button>
-
+    <button type="submit" class="btn btn-primary mt-3">Confirm Purchase</button>
 </form>
 
 </body>

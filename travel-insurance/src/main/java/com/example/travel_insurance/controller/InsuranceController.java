@@ -1,10 +1,14 @@
 package com.example.travel_insurance.controller;
 
 import com.example.travel_insurance.dto.PurchaseRequest;
+import com.example.travel_insurance.entity.InsurancePolicy;
 import com.example.travel_insurance.service.*;
+
+import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -37,20 +41,16 @@ public class InsuranceController {
 
     @PostMapping("/customer")
     public String customer(PurchaseRequest request, Model model){
-    System.out.println(request.getCoverage());
-    System.out.println(request.getArea());
-        model.addAttribute("coverage", request.getCoverage());
-        model.addAttribute("area", request.getArea());
-        model.addAttribute("plan", request.getPlan());
-        model.addAttribute("startDate", request.getStartDate());
-        model.addAttribute("endDate", request.getEndDate());
+
+        model.addAttribute("request", request);
 
         return "customer";
-}
+    }
 
     @PostMapping("/summary")
-    public String summary(PurchaseRequest request, Model model){
+        public String summary(@Valid @ModelAttribute("request") PurchaseRequest request, BindingResult result, Model model) {
 
+        try {
         long days = request.getStartDate()
                 .until(request.getEndDate())
                 .getDays();
@@ -63,15 +63,21 @@ public class InsuranceController {
 
         model.addAttribute("price", price);
         model.addAttribute("request", request);
-
         return "summary";
+
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "summary";
+        }
     }
 
     @PostMapping("/confirm")
-    public String confirm(PurchaseRequest request){
+    public String confirm(@ModelAttribute PurchaseRequest request, Model model) {
+        // Save the purchase
+        InsurancePolicy policy = insuranceService.purchase(request);
 
-        insuranceService.purchase(request);
-
-        return "success";
+        // Pass the saved policy to the success page
+        model.addAttribute("policy", policy);
+        return "confirm"; // Thymeleaf template: confirm.html
     }
 }

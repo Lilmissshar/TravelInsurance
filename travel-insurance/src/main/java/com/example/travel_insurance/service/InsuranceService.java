@@ -7,6 +7,7 @@ import com.example.travel_insurance.util.NRICUtil;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -27,6 +28,9 @@ public class InsuranceService {
 
     public InsurancePolicy purchase(PurchaseRequest request){
 
+        validateJourney(request.getStartDate(), request.getEndDate(), request.getPlan().toString());
+        validateAddress(request.getAddressLine1(), request.getAddressLine2());
+
         Customer customer = new Customer();
 
         customer.setFullName(request.getFullName());
@@ -34,11 +38,15 @@ public class InsuranceService {
         customer.setMobile(request.getMobile());
         customer.setEmail(request.getEmail());
 
-        customer.setDateOfBirth(
-                NRICUtil.getDob(request.getNric()));
+        LocalDate dob = NRICUtil.extractDob(request.getNric());
+        String gender = NRICUtil.extractGender(request.getNric());
 
-        customer.setGender(
-                NRICUtil.getGender(request.getNric()));
+        customer.setDateOfBirth(dob);
+        customer.setGender(gender);
+
+        customer.setAddressLine1(request.getAddressLine1());
+        customer.setAddressLine2(request.getAddressLine2());
+        customer.setPostCode(request.getPostCode());
 
         customerRepository.save(customer);
 
@@ -64,4 +72,45 @@ public class InsuranceService {
 
         return policyRepository.save(policy);
     }
+
+        public void validateJourney(LocalDate startDate, LocalDate endDate, String plan) {
+
+                LocalDate today = LocalDate.now();
+
+                // Start date must be today → 1 year from today
+                if (startDate.isBefore(today) || startDate.isAfter(today.plusYears(1))) {
+                        throw new IllegalArgumentException("Start date must be between today and 1 year from today.");
+                }
+
+                if ("SINGLE".equalsIgnoreCase(plan)) {
+
+                        if (endDate == null) {
+                        throw new IllegalArgumentException("End date is required for single trip.");
+                        }
+
+                        if (endDate.isAfter(startDate.plusDays(180))) {
+                        throw new IllegalArgumentException("Single trip cannot exceed 180 days.");
+                        }
+
+                } else if ("ANNUAL".equalsIgnoreCase(plan)) {
+
+                        LocalDate defaultEndDate = startDate.plusYears(1).minusDays(1);
+
+                        if (endDate == null) {
+                                endDate = defaultEndDate;
+                        }
+                }
+        }
+
+        public void validateAddress(String address1, String address2) {
+
+                if (address2 != null && !address2.isEmpty()) {
+
+                        if (address1 == null || address1.isEmpty()) {
+                                throw new IllegalArgumentException(
+                                        "Address Line 1 must exist if Address Line 2 is provided"
+                                );
+                        }
+                }
+        }
 }

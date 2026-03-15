@@ -4,29 +4,37 @@ import java.time.LocalDate;
 
 public class NRICUtil {
 
-    public static LocalDate getDob(String nric){
 
-        String yy = nric.substring(0,2);
-        String mm = nric.substring(2,4);
-        String dd = nric.substring(4,6);
-
-        int year = Integer.parseInt(yy);
-
-        if(year > 30){
-            year += 1900;
-        } else {
-            year += 2000;
-        }
-
-        return LocalDate.of(year,
-                Integer.parseInt(mm),
-                Integer.parseInt(dd));
-    }
-
-    public static String getGender(String nric){
+    public static String extractGender(String nric) {
 
         int lastDigit = Character.getNumericValue(nric.charAt(11));
 
-        return lastDigit % 2 == 0 ? "F" : "M";
+        if (lastDigit % 2 == 1) {
+            return "Male";
+        } else {
+            return "Female";
+    }
+}
+
+    public static LocalDate extractDob(String nric) {
+
+        if (nric == null || nric.length() != 12) {
+            throw new IllegalArgumentException("NRIC must be 12 digits");
+        }
+
+        String dobPart = nric.substring(0, 6);
+
+        int year = Integer.parseInt(dobPart.substring(0, 2));
+        int month = Integer.parseInt(dobPart.substring(2, 4));
+        int day = Integer.parseInt(dobPart.substring(4, 6));
+
+        int currentYear = LocalDate.now().getYear() % 100;
+        int fullYear = (year <= currentYear) ? 2000 + year : 1900 + year;
+
+        try {
+            return LocalDate.of(fullYear, month, day);
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("NRIC first 6 digits must be a valid YYMMDD date");
+        }
     }
 }

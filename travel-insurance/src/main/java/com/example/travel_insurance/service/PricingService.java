@@ -11,6 +11,12 @@ public class PricingService {
                                  Plan plan,
                                  long days){
 
+        if (coverage == null || area == null || plan == null) {
+            throw new IllegalArgumentException("Coverage, Area and Plan must be selected");
+        }
+
+    // pricing logic here
+
         if(coverage == Coverage.SINGLE){
 
             if(plan == Plan.A){

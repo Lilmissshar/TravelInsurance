@@ -1,19 +1,30 @@
-<form action="/summary" method="post">
+<form action="/summary" method="post" th:object="${request}">
 
 <h2>Customer Details</h2>
 
-<input name="fullName" placeholder="Full Name" required>
-<input name="nric" placeholder="NRIC" required>
-<input name="mobile" placeholder="Mobile" required>
-<input name="email" placeholder="Email" required>
+<label>Full Name</label>
+<input type="text" th:field="*{fullName}" placeholder="Full Name"/>
 
-<!-- PASS PREVIOUS DATA -->
+<label>NRIC</label>
+<input type="text" th:field="*{nric}" placeholder="NRIC"/>
 
-<input type="hidden" name="coverage" th:value="${coverage}">
-<input type="hidden" name="area" th:value="${area}">
-<input type="hidden" name="plan" th:value="${plan}">
-<input type="hidden" name="startDate" th:value="${startDate}">
-<input type="hidden" name="endDate" th:value="${endDate}">
+<label>Phone</label>
+<input type="text" th:field="*{mobile}" placeholder="Mobile"/>
+
+<label>Email</label>
+<input type="text" th:field="*{email}" placeholder="Email"/>
+
+<label>Address Line 1</label>
+<input type="text" th:field="*{addressLine1}" placeholder="AddressLine1"/>
+
+<label>Address Line 2</label>
+<input type="text" th:field="*{addressLine2}" placeholder="AddressLine2"/>
+
+<input type="hidden" th:field="*{coverage}">
+<input type="hidden" th:field="*{area}">
+<input type="hidden" th:field="*{plan}">
+<input type="hidden" th:field="*{startDate}">
+<input type="hidden" th:field="*{endDate}">
 
 <button type="submit">Next</button>
 

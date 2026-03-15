@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
+@Table(name = "insurance_policies")
 public class InsurancePolicy {
 
     @Id
@@ -32,5 +33,6 @@ public class InsurancePolicy {
     private Double price;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 }
