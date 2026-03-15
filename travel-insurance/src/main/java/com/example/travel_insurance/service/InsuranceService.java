@@ -8,7 +8,6 @@ import com.example.travel_insurance.util.NRICUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 @Service
 public class InsuranceService {
@@ -27,9 +26,6 @@ public class InsuranceService {
     }
 
     public InsurancePolicy purchase(PurchaseRequest request){
-
-        validateJourney(request.getStartDate(), request.getEndDate(), request.getPlan().toString());
-        validateAddress(request.getAddressLine1(), request.getAddressLine2());
 
         Customer customer = new Customer();
 
@@ -50,15 +46,12 @@ public class InsuranceService {
 
         customerRepository.save(customer);
 
-        long days = ChronoUnit.DAYS.between(
-                request.getStartDate(),
-                request.getEndDate());
 
         double price = pricingService.calculatePrice(
                 request.getCoverage(),
                 request.getArea(),
                 request.getPlan(),
-                days);
+                request);
 
         InsurancePolicy policy = new InsurancePolicy();
 
@@ -85,11 +78,11 @@ public class InsuranceService {
                 if ("SINGLE".equalsIgnoreCase(plan)) {
 
                         if (endDate == null) {
-                        throw new IllegalArgumentException("End date is required for single trip.");
+                                throw new IllegalArgumentException("End date is required for single trip.");
                         }
 
                         if (endDate.isAfter(startDate.plusDays(180))) {
-                        throw new IllegalArgumentException("Single trip cannot exceed 180 days.");
+                                throw new IllegalArgumentException("Single trip cannot exceed 180 days.");
                         }
 
                 } else if ("ANNUAL".equalsIgnoreCase(plan)) {
@@ -98,18 +91,6 @@ public class InsuranceService {
 
                         if (endDate == null) {
                                 endDate = defaultEndDate;
-                        }
-                }
-        }
-
-        public void validateAddress(String address1, String address2) {
-
-                if (address2 != null && !address2.isEmpty()) {
-
-                        if (address1 == null || address1.isEmpty()) {
-                                throw new IllegalArgumentException(
-                                        "Address Line 1 must exist if Address Line 2 is provided"
-                                );
                         }
                 }
         }

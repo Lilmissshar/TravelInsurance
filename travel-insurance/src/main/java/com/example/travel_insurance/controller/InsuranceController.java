@@ -16,58 +16,64 @@ public class InsuranceController {
 
     private final InsuranceService insuranceService;
     private final PricingService pricingService;
+    private final TravelValidationService travelValidationService;
 
     public InsuranceController(InsuranceService insuranceService,
-                               PricingService pricingService) {
+                               PricingService pricingService,
+                            TravelValidationService travelValidationService) {
         this.insuranceService = insuranceService;
         this.pricingService = pricingService;
+        this.travelValidationService = travelValidationService;
     }
 
     @GetMapping("/")
-    public String start(){
+    public String start(Model model){
+        model.addAttribute("request", new PurchaseRequest());
         return "step1";
     }
 
     @PostMapping("/step2")
-    public String step2(PurchaseRequest request, Model model){
-
-        model.addAttribute("coverage", request.getCoverage());
-        model.addAttribute("area", request.getArea());
-        model.addAttribute("startDate", request.getStartDate());
-        model.addAttribute("endDate", request.getEndDate());
-
-        return "step2";
+    public String step2(@ModelAttribute("request") PurchaseRequest request,
+                        Model model) {
+        try {
+            travelValidationService.validateJourney(request);
+            model.addAttribute("request", request);
+            return "step2";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("request", request);
+            return "step1";
+        }
     }
 
     @PostMapping("/customer")
     public String customer(PurchaseRequest request, Model model){
-
         model.addAttribute("request", request);
-
         return "customer";
     }
 
     @PostMapping("/summary")
         public String summary(@Valid @ModelAttribute("request") PurchaseRequest request, BindingResult result, Model model) {
-
         try {
-        long days = request.getStartDate()
-                .until(request.getEndDate())
-                .getDays();
+            double price = pricingService.calculatePrice(
+                    request.getCoverage(),
+                    request.getArea(),
+                    request.getPlan(),
+                    request);
 
-        double price = pricingService.calculatePrice(
-                request.getCoverage(),
-                request.getArea(),
-                request.getPlan(),
-                days);
+            model.addAttribute("price", price);
+            model.addAttribute("request", request);
 
-        model.addAttribute("price", price);
-        model.addAttribute("request", request);
-        return "summary";
+            travelValidationService.validateAddress(request.getAddressLine1(), request.getAddressLine2());
+
+            if (result.hasErrors()) {
+                return "customer"; // return the same page
+            }
+            return "summary";
 
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "summary";
+            return "customer";
         }
     }
 

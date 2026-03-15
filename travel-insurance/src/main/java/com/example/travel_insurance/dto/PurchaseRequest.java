@@ -24,29 +24,30 @@ public class PurchaseRequest {
 
     private LocalDate endDate;
 
-    // @NotBlank(message = "Full name is required")
+    @NotBlank(message = "Full name is required")
     private String fullName;
 
-    // @NotBlank(message = "NRIC is required")
-    // @Pattern(regexp = "\\d{12}", message = "NRIC must be 12 digits")
+    @NotBlank(message = "NRIC is required")
+    @Pattern(regexp = "\\d{12}", message = "NRIC must be 12 digits")
     private String nric;
 
-    // @Email(message = "Invalid email format (aa@bb.ccc)")
-    // @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format (aa@bb.ccc)")
+    @NotBlank(message = "Email is required")
     private String email;
 
-    // @Pattern(
-    //     regexp = "^01\\d{7,9}$",
-    //     message = "Mobile must start with 01 and be 9–11 digits"
-    // )
+    @NotBlank(message = "Mobile number is required")
+    @Pattern(
+        regexp = "^01\\d{7,9}$",
+        message = "Mobile must start with 01 and be 9–11 digits"
+    )
     private String mobile;
 
-    // @NotBlank(message = "Address Line 1 is required")
+    @NotBlank(message = "Address Line 1 is required")
     private String addressLine1;
 
     private String addressLine2;
 
-    // @Pattern(regexp = "\\d{5}", message = "Postcode must be 5 digits")
+    @Pattern(regexp = "\\d{5}", message = "Postcode must be 5 digits")
     private String postCode;
 
 }

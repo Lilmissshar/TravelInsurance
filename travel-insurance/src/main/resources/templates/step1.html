@@ -1,48 +1,108 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-rel="stylesheet">
-    <title>Travel Insurance - Step 1</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<title>Travel Insurance - Step 1</title>
+
 </head>
-<body>
+
+<body class="container mt-5">
 
 <h2>Step 1: Travel Details</h2>
 
+<p style="color:red" th:text="${errorMessage}"></p>
+
 <form action="/step2" method="post">
 
-    <label>Coverage:</label>
-    <select name="coverage">
-        <option value="SINGLE">Single Trip</option>
-        <option value="ANNUAL">Annual</option>
-    </select>
+<label>Coverage:</label>
 
-    <br><br>
+<select name="coverage" id="coverage" class="form-control">
+    <option value="SINGLE">Single Trip</option>
+    <option value="ANNUAL">Annual</option>
+</select>
 
-    <label>Area:</label>
-    <select name="area">
-        <option value="AREA1">Area 1</option>
-        <option value="AREA2">Area 2</option>
-        <option value="AREA3">Area 3</option>
-        <option value="AREA4">Area 4</option>
-    </select>
+<br>
 
-    <br><br>
+<label>Area:</label>
 
-    <label>Start Date:</label>
-    <input type="date" name="startDate">
+<select name="area" class="form-control">
+    <option value="AREA1">Area 1</option>
+    <option value="AREA2">Area 2</option>
+    <option value="AREA3">Area 3</option>
+    <option value="AREA4">Area 4</option>
+</select>
 
-    <br><br>
+<br>
 
-    <label>End Date:</label>
-    <input type="date" name="endDate">
+<label>Start Date:</label>
 
-    <br><br>
+<input type="date"
+       name="startDate"
+       id="startDate"
+       class="form-control"
+       required>
 
-    <button type="submit">Next</button>
+<br>
+
+<label>End Date:</label>
+
+<input type="date"
+       name="endDate"
+       id="endDate"
+       class="form-control"
+       required>
+
+<br>
+
+<button class="btn btn-primary" type="submit">Next</button>
 
 </form>
+
+<script>
+
+const coverage = document.getElementById("coverage");
+const startDate = document.getElementById("startDate");
+const endDate = document.getElementById("endDate");
+
+const today = new Date();
+const oneYear = new Date();
+oneYear.setFullYear(today.getFullYear() + 1);
+
+startDate.min = today.toISOString().split("T")[0];
+startDate.max = oneYear.toISOString().split("T")[0];
+
+function updateEndDate() {
+
+    if (!startDate.value) return;
+
+    const start = new Date(startDate.value);
+
+    if (coverage.value === "ANNUAL") {
+
+        const end = new Date(start);
+        end.setFullYear(end.getFullYear() + 1);
+        end.setDate(end.getDate() - 1);
+
+        endDate.value = end.toISOString().split("T")[0];
+        endDate.readOnly = true;
+
+    } else {
+
+        const maxEnd = new Date(start);
+        maxEnd.setDate(maxEnd.getDate() + 180);
+
+        endDate.min = startDate.value;
+        endDate.max = maxEnd.toISOString().split("T")[0];
+        endDate.readOnly = false;
+    }
+}
+
+coverage.addEventListener("change", updateEndDate);
+startDate.addEventListener("change", updateEndDate);
+
+</script>
 
 </body>
 </html>

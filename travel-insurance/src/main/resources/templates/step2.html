@@ -12,10 +12,10 @@
 
 <!-- PASS STEP 1 DATA -->
 
-<input type="hidden" name="coverage" th:value="${coverage}">
-<input type="hidden" name="area" th:value="${area}">
-<input type="hidden" name="startDate" th:value="${startDate}">
-<input type="hidden" name="endDate" th:value="${endDate}">
+<input type="hidden" name="coverage" th:value="${request.coverage}">
+<input type="hidden" name="area" th:value="${request.area}">
+<input type="hidden" name="startDate" th:value="${request.startDate}">
+<input type="hidden" name="endDate" th:value="${request.endDate}">
 
 <button type="submit">Next</button>
 

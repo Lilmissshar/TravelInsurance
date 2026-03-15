@@ -4,21 +4,30 @@
 
 <label>Full Name</label>
 <input type="text" th:field="*{fullName}" placeholder="Full Name"/>
+<p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="color:red"></p>
 
 <label>NRIC</label>
 <input type="text" th:field="*{nric}" placeholder="NRIC"/>
+<p th:if="${#fields.hasErrors('nric')}" th:errors="*{nric}" style="color:red"></p>
 
 <label>Phone</label>
 <input type="text" th:field="*{mobile}" placeholder="Mobile"/>
+<p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}" style="color:red"></p>
 
 <label>Email</label>
 <input type="text" th:field="*{email}" placeholder="Email"/>
+<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></p>
 
 <label>Address Line 1</label>
 <input type="text" th:field="*{addressLine1}" placeholder="AddressLine1"/>
+<p th:if="${#fields.hasErrors('addressLine1')}" th:errors="*{addressLine1}" style="color:red"></p>
 
 <label>Address Line 2</label>
 <input type="text" th:field="*{addressLine2}" placeholder="AddressLine2"/>
+
+<label>Post Code</label>
+<input type="text" th:field="*{postCode}" placeholder="Post Code"/>
+<p th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}" style="color:red"></p>
 
 <input type="hidden" th:field="*{coverage}">
 <input type="hidden" th:field="*{area}">

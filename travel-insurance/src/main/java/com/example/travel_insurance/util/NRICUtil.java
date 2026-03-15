@@ -13,8 +13,8 @@ public class NRICUtil {
             return "Male";
         } else {
             return "Female";
+        }
     }
-}
 
     public static LocalDate extractDob(String nric) {
 
