@@ -87,12 +87,12 @@ cd travel-insurance
 
 ---
 
-# Pull the Latest Code from Master
+# Pull the Latest Code from Main
 
 If the repository already exists locally, update it with the latest changes:
 
 ```
-git pull origin master
+git pull origin main
 ```
 
 ---
